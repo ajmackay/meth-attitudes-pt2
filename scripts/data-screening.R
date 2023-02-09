@@ -24,23 +24,40 @@ trait.ids <- trait.df %>% filter(trait.full) %>% pull(id)
 audit.ids <- audit.df %>% filter(audit.full) %>% pull(id)
 
 
-
+dems.df %>%
+  filter(
+    ma.ingest
+         ,dems.full
+         ,id %in% ma.id
+         ,id %in% dd.ids,
+         id %in% trait.ids, id %in% state.ids
+         , id %in% audit.ids
+         # ,id %in% duid.inst.ids
+         , id %in% duid.att.ids)
 # N with full attidues ----------------------------------------------------
 #### Meth users ####
 ##### Instances #####
 duid.inst.ids <- duid.inst.df %>%
-  filter(ma.ingest, duid.inst.full) %>% pull(id)
+  filter(duid.inst.full) %>% pull(id)
 
 ##### Attitudes #####
-duid.att.df %>%
-  filter(ma.ingest, id %in% dems.ids, id %in% dd.ids, id %in% state.ids
-         # ,id %in% trait.ids
+duid.att.ids <- duid.att.df %>%
+  filter(duid.att.full) %>% pull(id)
+
+
+duid.att.df %>%   select(-c("duid.att.total", "duid.att.full")) %>%
+  filter(ma.ingest,
+         id %in% ma.id,
+         id %in% dems.ids,
+         id %in% dd.ids,
+         id %in% state.ids,
+         id %in% trait.ids
+         ,id %in% audit.ids
          ) %>%
-  select(-c("duid.att.total", "duid.att.full")) %>%
-  # select(-duid.att.once.while) %>%
-  select(-duid.att.strict) %>%
+  select(-duid.att.once.while) %>%
+  # select(-duid.att.strict) %>%
   # select(-duid.att.jail) %>%
-  select(-duid.att.friends) %>%
+  # select(-duid.att.friends) %>%
   # select(-duid.att.high) %>%
 
   # select(-duid.att.police) %>%
@@ -50,8 +67,11 @@ duid.att.df %>%
 
 # Correlation between answers
 select(duid.att.df, -c(id, duid.att.total, duid.att.full)) %>%
-  ggpairs(showStrips = TRUE)
-  # cor(use = "complete.obs", method = "pearson") %>% view
+  add_any_miss() %>% filter(any_miss_all == "complete") %>%
+  # ggpairs(showStrips = TRUE)
+  ggcorr(label = TRUE,
+         label_size = 3)
+  # cor(use = "complete.obs", method = "pearson") %>%
 
 duid.att.df %>%
   ggplot(aes(x = duid.att.strict, y = duid.att.jail)) +
