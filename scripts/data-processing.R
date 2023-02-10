@@ -786,19 +786,19 @@ summ.df <- dems.df %>%
 # Final Data for Analyses -------------------------------------------------
 #### MA group ####
 
-ma.id <- summ.df %>%
-  filter(ma.ingest,
-         dems.full,
-         audit.full,
-         sds.full,
-         k6.full,
-         trait.full,
-         dd.full,
-         # dui.strat.full,
-         # duid.strat.full,
-         # dui.att.full,
-         # duid.att.full
-  ) %>% pull(id)
+# ma.id <- summ.df %>%
+#   filter(ma.ingest,
+#          dems.full,
+#          audit.full,
+#          sds.full,
+#          k6.full,
+#          trait.full,
+#          dd.full,
+#          # dui.strat.full,
+#          # duid.strat.full,
+#          # dui.att.full,
+#          # duid.att.full
+#   ) %>% pull(id)
 
 
 ma.final <- summ.df %>%

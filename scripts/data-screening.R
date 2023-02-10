@@ -9,8 +9,12 @@ load("objects/all-objects.RData")
 
 
 # Completed data ----------------------------------------------------------
-#### Dems ####
+#### Demographics ####
 dems.ids <- dems.df %>% filter(dems.full) %>% pull(id)
+
+#### SDS ####
+sds.ids <- ma.df %>%
+  filter(sds.full) %>% pull(id)
 
 #### DDDI ####
 dd.ids <- dd.df %>% filter(dd.full) %>% pull(id)
@@ -23,19 +27,7 @@ trait.ids <- trait.df %>% filter(trait.full) %>% pull(id)
 #### AUDIT ####
 audit.ids <- audit.df %>% filter(audit.full) %>% pull(id)
 
-
-dems.df %>%
-  filter(
-    ma.ingest
-         ,dems.full
-         ,id %in% ma.id
-         ,id %in% dd.ids,
-         id %in% trait.ids, id %in% state.ids
-         , id %in% audit.ids
-         # ,id %in% duid.inst.ids
-         , id %in% duid.att.ids)
-# N with full attidues ----------------------------------------------------
-#### Meth users ####
+#### DUID ####
 ##### Instances #####
 duid.inst.ids <- duid.inst.df %>%
   filter(duid.inst.full) %>% pull(id)
@@ -43,6 +35,63 @@ duid.inst.ids <- duid.inst.df %>%
 ##### Attitudes #####
 duid.att.ids <- duid.att.df %>%
   filter(duid.att.full) %>% pull(id)
+
+##### Strategies #####
+duid.strat.ids <- duid.strat.df %>%
+  filter(duid.strat.full) %>% pull(id)
+
+
+#### DUI ####
+##### Attitudes #####
+dui.att.ids <- dui.att.df %>%
+  filter(dui.att.full) %>% pull(id)
+
+##### Strategies #####
+dui.strat.ids <- dui.strat.df %>%
+  filter(dui.strat.full) %>% pull(id)
+
+
+#### Sample of Meth users ####
+ma.ids <- dems.df %>%
+  filter(
+    ma.ingest
+    ,dems.full
+    ,id %in% sds.ids
+
+    ,id %in% dd.ids
+    ,id %in% trait.ids
+    ,id %in% state.ids
+    ,id %in% audit.ids
+    # ,id %in% duid.inst.ids
+
+    ,id %in% dui.att.ids
+    ,id %in% dui.strat.ids
+
+    ,id %in% duid.att.ids
+    ,id %in% duid.strat.ids
+  ) %>% pull(id)
+
+
+#### Sample of non-drug users
+n.ma.ids <- dems.df %>%
+  filter(
+    !ma.ingest
+    ,dems.full
+    ,id %in% dd.ids
+    ,id %in% trait.ids
+    ,id %in% audit.ids
+
+    ,id %in% dui.att.ids
+    ,id %in% dui.strat.ids
+
+    ,id %in% duid.att.ids
+  ) %>% pull(id)
+
+# Dataframe will all variables for those with completed shit
+dat
+
+# N with full attidues ----------------------------------------------------
+
 
 
 duid.att.df %>%   select(-c("duid.att.total", "duid.att.full")) %>%
