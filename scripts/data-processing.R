@@ -615,10 +615,15 @@ dui.inst.att.df <- survey.screened %>%
            .x == "Disagree" ~ 2,
            .x == "Strongly disagree" ~ 1))
   ) %>%
-  mutate(dui.att.total = select(., starts_with("dui.att")) %>%
-           rowSums(na.rm = FALSE),
-         dui.att.full = !is.na(dui.att.total)) %>%
+  mutate(
+    dui.att.risk = select(., dui.att.overrated, dui.att.police, dui.att.drunk) %>% rowMeans(na.rm = FALSE),
+    dui.att.sanction = select(., dui.att.strict, dui.att.jail, dui.att.lose) %>% rowMeans(na.rm = FALSE),
+    dui.att.peer = select(., dui.att.friends, dui.att.dumb) %>% rowMeans(na.rm = FALSE),
+    dui.att.mean = select(., starts_with("dui.att")) %>% rowMeans(na.rm = FALSE),
+         dui.att.full = !is.na(dui.att.mean)) %>%
   select(id, ma.ingest, starts_with("dui"))
+
+#--
 
 dui.att.df <- dui.inst.att.df %>%
   select(id, ma.ingest, starts_with("dui.att"))
@@ -720,12 +725,19 @@ duid.inst.att.df <- survey.screened %>%
     duid.inst.total = select(., duid.inst.ever, duid.inst.revoked, duid.inst.hurt) %>%
       rowSums(na.rm = FALSE),
     duid.inst.full = !is.na(duid.inst.total),
-         duid.att.total = select(., duid.att.friends:duid.att.lose) %>% rowSums(na.rm = FALSE),
-         duid.att.full = !is.na(duid.att.total)) %>%
-  select(id, ma.ingest, starts_with("duid"), duid.att.total)
+
+    # Calculate factor scores for attitudes --> I think I need to do the mean not rowSums...
+    duid.att.risk = select(., duid.att.overrated, duid.att.police, duid.att.caught) %>% rowMeans(na.rm = FALSE),
+    duid.att.sanction = select(., duid.att.strict, duid.att.jail, duid.att.lose) %>% rowMeans(na.rm = FALSE),
+    duid.att.peer = select(., duid.att.friends, duid.att.dumb) %>% rowMeans(na.rm = FALSE),
 
 
+    duid.att.mean = select(., duid.att.friends:duid.att.lose) %>% rowMeans(na.rm = FALSE),
+    duid.att.full = !is.na(duid.att.mean)) %>%
+  select(id, ma.ingest, starts_with("duid"))
 
+
+#--
 
 duid.att.df <- duid.inst.att.df %>%
   select(id, ma.ingest, starts_with("duid.att"))
