@@ -783,6 +783,7 @@ duid.strat.dich.df <- duid.strat.df %>%
 
 #### Summary ####
 # Key dems and totals of assessments
+if(FALSE){
 summ.df <- dems.df %>%
   left_join(select(audit.df, id, audit.total, audit.risky, audit.full)) %>%
   left_join(select(ma.df, id, ma.use.peak, sds.total, sds.full, ma.type, ma.use.age)) %>%
@@ -794,25 +795,6 @@ summ.df <- dems.df %>%
   left_join(select(duid.inst.att.df, id, duid.inst.revoked, duid.att.total, duid.att.full)) %>%
   left_join(select(duid.strat.df, id, duid.strat.total, duid.strat.full))
 
-
-# Final Data for Analyses -------------------------------------------------
-#### MA group ####
-
-# ma.id <- summ.df %>%
-#   filter(ma.ingest,
-#          dems.full,
-#          audit.full,
-#          sds.full,
-#          k6.full,
-#          trait.full,
-#          dd.full,
-#          # dui.strat.full,
-#          # duid.strat.full,
-#          # dui.att.full,
-#          # duid.att.full
-#   ) %>% pull(id)
-
-
 ma.final <- summ.df %>%
   filter(id %in% ma.id) %>%
   select(id, age, sex, education, area.live,
@@ -822,14 +804,7 @@ ma.final <- summ.df %>%
 ma.final <- ma.final %>%
   mutate(sex = factor(sex, levels = c("Male", "Female")))
 
-
-# ma.final <- ma.final %>%
-#   mutate(education = fct_collapse(education,
-#                                   "University Degree" = c("Bachelor Degree", "Postgraduate Degree"),
-#                                   "Highschool/Technical Degree" = c("Vocational/Technical degree or certificate",
-#                                                                     "High School Diploma")),
-#          area.live = fct_collapse(area.live,
-#                                   "Rural/Suburban" = c("Rural", "Suburban")))
+}
 
 ma.dems <- ma.df %>%
   filter(id %in% ma.id) %>%
@@ -841,6 +816,6 @@ ma.dems <- ma.df %>%
 
 #### Save Image ####
 save.image(file = "objects/all-objects.RData")
-
+message(crayon::green("Data Processing Successfully Run and objects saved"))
 
 
