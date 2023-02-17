@@ -1,8 +1,10 @@
+####
+
 #### Format p ####
 format.p <- function(dat){
   if(!any(str_detect(class(dat), "tbl"))){
-    
-    as_tibble(dat) %>% 
+
+    as_tibble(dat) %>%
       mutate(p = scales::pvalue(p))
   }
 }
@@ -27,7 +29,18 @@ margin.error <- function(level = 0.975, sd, n){
 
 
 #### Save Objects ####
-save.objects <- function() save.image(file = "objects/all-objects.RData")
+save.objects <- function(path = NULL) {
+  if(is.null(path)){
+    path <- "objects/all-objects.RData"
+    save.image(file = path)
+  } else{
+    path <- path
+    save.image(file = path)
+  }
+
+  message(crayon::green(str_glue("Environment saved at ", crayon::black("{path}"))))
+
+}
 
 
 #### Effect Size Calculator ####
@@ -35,15 +48,15 @@ lm.effect.size <- function(dat, iv, dv){
   # browser()
   part.cor <- ppcor::spcor(select(dat, !!enquo(iv), !!enquo(dv)))
   partial.cor <- ppcor::pcor(select(dat, !!enquo(iv), !!enquo(dv)))
-  
+
   message(str_c("Dependent Variable: ", dv))
-  
+
   tibble(
     Variable = c(iv, dv),
     Part = data.frame(part.cor$estimate) %>% pull(!!enquo(dv)),
     Partial = data.frame(partial.cor$estimate) %>% pull(!!enquo(dv)),
     F2 = (Part^2) / (1 - Part^2)
-  ) %>% 
+  ) %>%
     filter(Variable != dv)
 }
 
@@ -58,8 +71,8 @@ tmp <- function(models){
       dv = summ$terms[[2]]
     )
   # tibble(dv = summary(models)$terms[[2]])
-    
-    
+
+
   })
 }
 

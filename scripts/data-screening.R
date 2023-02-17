@@ -27,6 +27,11 @@ trait.ids <- trait.df %>% filter(trait.full) %>% pull(id)
 #### AUDIT ####
 audit.ids <- audit.df %>% filter(audit.full) %>% pull(id)
 
+#### K6 Psychological Distress ####
+k6.ids <- k6.df %>%
+  filter(k6.full) %>%
+  pull(id)
+
 #### DUID ####
 ##### Instances #####
 duid.inst.ids <- duid.inst.df %>%
@@ -51,6 +56,8 @@ dui.strat.ids <- dui.strat.df %>%
   filter(dui.strat.full) %>% pull(id)
 
 
+
+# Sample ------------------------------------------------------------------
 #### Sample of Meth users ####
 ma.ids <- dems.df %>%
   filter(
@@ -62,11 +69,13 @@ ma.ids <- dems.df %>%
     ,id %in% trait.ids
     ,id %in% state.ids
     ,id %in% audit.ids
-    # ,id %in% duid.inst.ids
+    ,id %in% k6.ids
+
 
     ,id %in% dui.att.ids
     ,id %in% dui.strat.ids
 
+    # ,id %in% duid.inst.ids
     ,id %in% duid.att.ids
     ,id %in% duid.strat.ids
   ) %>% pull(id)
@@ -80,6 +89,7 @@ n.ma.ids <- dems.df %>%
     ,id %in% dd.ids
     ,id %in% trait.ids
     ,id %in% audit.ids
+    ,id %in% k6.ids
 
     ,id %in% dui.att.ids
     ,id %in% dui.strat.ids
@@ -87,10 +97,39 @@ n.ma.ids <- dems.df %>%
     ,id %in% duid.att.ids
   ) %>% pull(id)
 
-# Dataframe will all variables for those with completed shit
-dat
 
-# N with full attidues ----------------------------------------------------
+# Full dataframe ----------------------------------------------------------
+dat <- dems.df %>%
+  filter(id %in% c(ma.ids, n.ma.ids)) %>%
+  left_join(select(ma.df, id, ma.use.peak, ma.12.months, ma.recent.use, ma.use.age, ma.use.ways, sds.total, ma.type,
+                   ma.want.to.change)) %>%
+  # DDDI
+  left_join(select(dd.df, id, dd.ne.total, dd.ad.total, dd.rd.total, dd.total)) %>%
+  # Anger
+  left_join(select(trait.df, id, trait.total)) %>%
+  left_join(select(state.df, id, state.total)) %>%
+  # Alcohol Use (AUDIT)
+  left_join(select(audit.df, id, audit.total, audit.risky)) %>%
+  # Psychological Distress
+  left_join(select(k6.df, id, k6.total, psychiatric.diagnosis)) %>%
+  # DUI
+  left_join(select(dui.att.df, id, dui.att.risk, dui.att.sanction, dui.att.peer, dui.att.mean)) %>%
+  # left_join(select(dui.strat.df, id, dui.strat.total))
+  # DUID
+  left_join(select(duid.att.df, id, duid.att.risk, duid.att.sanction, duid.att.peer, duid.att.mean))
+
+
+
+
+
+
+
+
+
+
+# Archive -----------------------------------------------------------------
+
+if(FALSE){
 
 
 
@@ -139,3 +178,4 @@ duid.att.df %>%
   add_any_miss() %>% count(any_miss_all)
   vis_miss()
 
+}

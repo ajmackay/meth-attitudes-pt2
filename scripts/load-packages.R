@@ -19,6 +19,7 @@ packages <- c("janitor",
               "rstatix", # For ANOVA test and quick summary stats
               "ggpubr", # Publishable graphs
               "gdtools" # For font name
+              ,"lavaan" # path analysis (latent varable analysis)
               )
 
 librarian::shelf(packages)

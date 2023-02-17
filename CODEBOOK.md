@@ -1,7 +1,7 @@
 ## Attitudes Toward DUID
 
 | Variable Name       | Questionnaire Item                                                    |
-|-------------------------------|---------------------------------------------|
+|---------------------|-----------------------------------------------------------------------|
 | duid.att.friends    | Most of my friends think its OK to take drugs and drive               |
 | duid.att.high       | It's OK to drive after taking drugs as long as you're not too high    |
 | duid.att.jail       | People who take drugs and drive should go to jail                     |
