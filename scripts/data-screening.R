@@ -97,6 +97,27 @@ n.ma.ids <- dems.df %>%
     ,id %in% duid.att.ids
   ) %>% pull(id)
 
+#### TODO Only Attitudes ####
+ma.ids <- summ. %>%
+  filter(
+    ma.ingest
+    ,dems.full
+    ,id %in% sds.ids
+
+    ,id %in% dd.ids
+    ,id %in% trait.ids
+    ,id %in% state.ids
+    ,id %in% audit.ids
+    ,id %in% k6.ids
+
+
+    ,id %in% dui.att.ids
+    ,id %in% dui.strat.ids
+
+    # ,id %in% duid.inst.ids
+    ,id %in% duid.att.ids
+    ,id %in% duid.strat.ids
+  ) %>% pull(id)
 
 # Full dataframe ----------------------------------------------------------
 dat <- dems.df %>%
