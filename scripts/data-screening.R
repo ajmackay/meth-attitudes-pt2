@@ -59,83 +59,31 @@ dui.strat.ids <- dui.strat.df %>%
 
 # Sample ------------------------------------------------------------------
 #### Sample of Meth users ####
-ma.ids <- dems.df %>%
+ma.ids <- select(summ.df, id, ma.ingest) %>%
   filter(
     ma.ingest
-    ,dems.full
-    ,id %in% sds.ids
-
     ,id %in% dd.ids
-    ,id %in% trait.ids
-    ,id %in% state.ids
-    ,id %in% audit.ids
-    ,id %in% k6.ids
-
-
-    ,id %in% dui.att.ids
-    ,id %in% dui.strat.ids
-
-    # ,id %in% duid.inst.ids
     ,id %in% duid.att.ids
-    ,id %in% duid.strat.ids
   ) %>% pull(id)
+
+
 
 
 #### Sample of non-drug users
-n.ma.ids <- dems.df %>%
+n.ndu.ids <- select(summ.df, id, ma.ingest) %>%
   filter(
     !ma.ingest
-    ,dems.full
     ,id %in% dd.ids
-    ,id %in% trait.ids
-    ,id %in% audit.ids
-    ,id %in% k6.ids
-
-    ,id %in% dui.att.ids
-    ,id %in% dui.strat.ids
-
     ,id %in% duid.att.ids
   ) %>% pull(id)
 
-#### TODO Only Attitudes ####
-ma.ids <- summ. %>%
-  filter(
-    ma.ingest
-    ,dems.full
-    ,id %in% sds.ids
 
-    ,id %in% dd.ids
-    ,id %in% trait.ids
-    ,id %in% state.ids
-    ,id %in% audit.ids
-    ,id %in% k6.ids
-
-
-    ,id %in% dui.att.ids
-    ,id %in% dui.strat.ids
-
-    # ,id %in% duid.inst.ids
-    ,id %in% duid.att.ids
-    ,id %in% duid.strat.ids
-  ) %>% pull(id)
-
-# Full dataframe ----------------------------------------------------------
-dat <- dems.df %>%
-  filter(id %in% c(ma.ids, n.ma.ids)) %>%
-  left_join(select(ma.df, id, ma.use.peak, ma.12.months, ma.recent.use, ma.use.age, ma.use.ways, sds.total, ma.type,
-                   ma.want.to.change)) %>%
+# DF with dd and attitudes ------------------------------------------------
+dat <- select(summ.df, id, ma.ingest) %>%
+  filter(id %in% c(ma.ids, n.ndu.ids)) %>%
   # DDDI
   left_join(select(dd.df, id, dd.ne.total, dd.ad.total, dd.rd.total, dd.total)) %>%
-  # Anger
-  left_join(select(trait.df, id, trait.total)) %>%
-  left_join(select(state.df, id, state.total)) %>%
-  # Alcohol Use (AUDIT)
-  left_join(select(audit.df, id, audit.total, audit.risky)) %>%
-  # Psychological Distress
-  left_join(select(k6.df, id, k6.total, psychiatric.diagnosis)) %>%
-  # DUI
-  left_join(select(dui.att.df, id, dui.att.risk, dui.att.sanction, dui.att.peer, dui.att.mean)) %>%
-  # left_join(select(dui.strat.df, id, dui.strat.total))
+
   # DUID
   left_join(select(duid.att.df, id, duid.att.risk, duid.att.sanction, duid.att.peer, duid.att.mean))
 
@@ -148,10 +96,67 @@ dat <- dems.df %>%
 
 
 
+
 # Archive -----------------------------------------------------------------
-
 if(FALSE){
+  # Full dataframe ----------------------------------------------------------
+  dat <- dems.df %>%
+    filter(id %in% c(ma.ids, n.ma.ids)) %>%
+    left_join(select(ma.df, id, ma.use.peak, ma.12.months, ma.recent.use, ma.use.age, ma.use.ways, sds.total, ma.type,
+                     ma.want.to.change)) %>%
+    # DDDI
+    left_join(select(dd.df, id, dd.ne.total, dd.ad.total, dd.rd.total, dd.total)) %>%
+    # Anger
+    left_join(select(trait.df, id, trait.total)) %>%
+    left_join(select(state.df, id, state.total)) %>%
+    # Alcohol Use (AUDIT)
+    left_join(select(audit.df, id, audit.total, audit.risky)) %>%
+    # Psychological Distress
+    left_join(select(k6.df, id, k6.total, psychiatric.diagnosis)) %>%
+    # DUI
+    left_join(select(dui.att.df, id, dui.att.risk, dui.att.sanction, dui.att.peer, dui.att.mean)) %>%
+    # left_join(select(dui.strat.df, id, dui.strat.total))
+    # DUID
+    left_join(select(duid.att.df, id, duid.att.risk, duid.att.sanction, duid.att.peer, duid.att.mean))
 
+  #### Sample of non-drug users
+  n.ma.ids <- dems.df %>%
+    filter(
+      !ma.ingest
+      ,dems.full
+      ,id %in% dd.ids
+      ,id %in% trait.ids
+      ,id %in% audit.ids
+      ,id %in% k6.ids
+
+      ,id %in% dui.att.ids
+      ,id %in% dui.strat.ids
+
+      ,id %in% duid.att.ids
+    ) %>% pull(id)
+
+
+  #### Sample of Meth users ####
+  ma.ids <- dems.df %>%
+    filter(
+      ma.ingest
+      ,dems.full
+      ,id %in% sds.ids
+
+      ,id %in% dd.ids
+      ,id %in% trait.ids
+      ,id %in% state.ids
+      ,id %in% audit.ids
+      ,id %in% k6.ids
+
+
+      ,id %in% dui.att.ids
+      ,id %in% dui.strat.ids
+
+      # ,id %in% duid.inst.ids
+      ,id %in% duid.att.ids
+      ,id %in% duid.strat.ids
+    ) %>% pull(id)
 
 
 duid.att.df %>%   select(-c("duid.att.total", "duid.att.full")) %>%

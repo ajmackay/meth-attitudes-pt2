@@ -1,0 +1,71 @@
+---
+title: "Regression Assumptions"
+author: "Aaron"
+format: 
+  docx:
+    toc: false
+editor: visual
+---
+
+```{r prep, include=FALSE}
+source("scripts/load-packages.R")
+source("scripts/functions.R")
+load("objects/all-objects.RData")
+
+# Flextable default
+set_flextable_defaults(theme_fun = theme_vanilla,
+                       table.layout = 'autofit')
+```
+
+$$
+DDDI_i=\beta_0+\beta_1attitude\_risk+\beta_2attitude\_sanction+\beta_3attitude\_peer+e_i
+$$
+
+## Question
+
+We are wanting to see whether certain attitudes toward Driving under the influence of drugs (DUID) predict self-reporting dangerous driving behaviour (DDB) and how the effect of DUID attitudes on DDB may differ between Methamphetamine Users (MAU) and Non Drug Users (NDU) - it has previously been demonstrated that attitudes toward DUID are a significant predictor of DDB in a university sample and we are wanting to further this research with a more deliberately selected population and sample.
+
+To do this, I thought I would run 2 regressions (one for MAU and one for NDU) and compare the coefficients (standardized?) for each predictor between each model. This way we could discuss both the association between DUID attitudes and dangerous driving behaviour as well as how this association differs between MAU and NDU.
+
+The model I have been developing takes Dangerous Driving as the DV (assessed using the Dula Dangerous Driving Index - DDDI) and uses 3 measures/types of attitudes toward DUID as the predictors (attitudes toward the **risk** of DUID, attitudes toward the **sanctions** of DUID and attitudes of ones **peers** toward DUID).
+
+1.  Do we have enough power - how do we assess power and stuff?
+2.  Assumptions are violated - wtf do we do man?
+
+## Assumptions
+
+### Linearity
+
+```{r, echo=FALSE}
+p.ma.1 + p.ndu.1
+```
+
+### Normality
+
+```{r, echo=FALSE}
+p.ma.2 + p.ndu.2
+```
+
+### Equal Variance
+
+```{r, echo=FALSE}
+p.ma.3 + p.ndu.3
+```
+
+### Multicolinearity
+
+```{r, echo= FALSE}
+mcl.ma %>% 
+  prep.table() %>% 
+  flextable() %>% 
+  set_caption("Multicolinearity (MA Data)")
+```
+
+<br>
+
+```{r, echo=FALSE}
+mcl.ndu %>% 
+  prep.table() %>% 
+  flextable() %>% 
+  set_caption("Multicolinearity (NDU Data)")
+```

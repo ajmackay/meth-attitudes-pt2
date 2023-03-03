@@ -20,6 +20,7 @@ packages <- c("janitor",
               "ggpubr", # Publishable graphs
               "gdtools" # For font name
               ,"lavaan" # path analysis (latent varable analysis)
+              ,"ggfortify" # Regression assumptions plots as ggplot
               )
 
 librarian::shelf(packages)

@@ -1,5 +1,11 @@
 # General thinking
 
+## 2023-03-03
+
+-   Assumptions should probably be checked for each separate model (not model with all data)
+
+    -   If we are to compare the coefficients of each model then we need to be confident that the coefficients in each model are at least accurate
+
 ## 2023-02-17
 
 -   If we use full k6 data, we have 49 meth users (if we don't use k6 we have 50)

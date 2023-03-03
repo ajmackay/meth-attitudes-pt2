@@ -1,4 +1,14 @@
-####
+#### Prep Table ####
+prep.table <- function(dat, dp = 2){
+  # Turning names into title
+  # dat.names <- names(dat)
+  # already.up <- str_detect(x, "^[:upper:]+$")
+  # str_to_title(dat.names[!already.up])
+  dat <- dat %>%
+    mutate(across(where(is.numeric), ~round(.x, dp)))
+
+  dat
+}
 
 #### Format p ####
 format.p <- function(dat){
