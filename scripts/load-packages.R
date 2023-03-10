@@ -12,7 +12,7 @@ packages <- c("janitor",
               "patchwork",
               "tidyverse",
               "olsrr",
-              "broom",
+              "broom", # For regression results
               "gtsummary",
               "officer",
               "shadowtext",
@@ -25,4 +25,4 @@ packages <- c("janitor",
 
 librarian::shelf(packages)
 
-message(crayon::green("Packages Loaded Successfully"))
+message(crayon::green(str_c("Packages Loaded Successfully: ", glue::glue_collapse(packages, sep = ", ", last = " and ") )))

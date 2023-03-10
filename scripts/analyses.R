@@ -10,8 +10,8 @@ load("objects/all-objects.RData")
 # Checking Assumptions ----------------------------------------------------
 #### Prep ####
 ##### Regression Model #####
-# Full Data (including meth use)
-lm.full <- lm(dd.total ~ duid.att.risk + duid.att.sanction + duid.att.peer + ma.ingest, data = dat)
+# # Full Data (including meth use)
+# lm.full <- lm(dd.total ~ duid.att.risk + duid.att.sanction + duid.att.peer + ma.ingest, data = dat)
 
 # MA
 lm.ma <- lm(dd.total ~ duid.att.risk + duid.att.sanction + duid.att.peer, data = filter(dat, ma.ingest))
@@ -33,6 +33,12 @@ duid.cor.ndu <- cor(select(filter(dat, !ma.ingest), all_of(duid.vars), dd.total)
 p.full.1 <- autoplot(lm.full, 1) + labs(title = "Full Data") + theme_light()
 p.ma.1 <- autoplot(lm.ma, 1) + labs(title = "MA Data") + theme_light()
 p.ndu.1 <- autoplot(lm.ndu, 1) + labs(title = "NDU Data") + theme_light()
+
+# ass.path <- "output/regression-assumptions/"
+#
+# if(FALSE){
+#   ggsave(str_c(ass.path, "linearity-ma.svg"), p.ma.1)
+# }
 
 dat %>%
   filter(ma.ingest) %>%
@@ -68,7 +74,7 @@ p.cor.ndu <- corrplot::corrplot(duid.cor.ndu,
 
 #### Regression ####
 # Overall Multicolinearity Diagnostics
-mctest::omcdiag(ma.lm)
+mctest::omcdiag(lm.ma)
 
 # Individual Multicolinearity Diagnostics
 row.names <- c("DUID Risk", "DUID Sanction", "DUID Peer")
@@ -94,3 +100,55 @@ mcl.ndu <- mctest::imcdiag(lm.ndu) %>%
   tibble()
 
 x$idiags
+
+#### Quadratic Model ####
+
+
+
+
+#### Individual Variables with DD ####
+p.di.att <- dat %>%
+  select(dd.total, ma.ingest, duid.att.risk, duid.att.sanction, duid.att.peer) %>%
+  mutate(ma.ingest = if_else(ma.ingest, "MA User", "Non-Drug User")) %>%
+  pivot_longer(cols = starts_with("duid.")) %>%
+
+  ggplot(aes(x = value, y = dd.total, col = name)) +
+  geom_point(size = 2) +
+
+  facet_grid(ma.ingest~name, scales = "free", space = "free") +
+
+  labs(x = "Attitude Score",
+       y = "DDDI Total",
+       title = "DDDI Total Score with Attitudes Score by Drug User Group") +
+
+
+  scale_color_discrete(
+    name = element_blank(),
+    labels = c("Peer Attitudes", "Attitudes toward Risk", "Attitudes toward Sanctions")
+  ) +
+
+  theme_light() +
+
+    theme(
+      legend.position = "bottom",
+      strip.text.x = element_blank(),
+      strip.background.y = element_rect(fill = "grey20")
+    )
+
+
+if(FALSE){
+  ggsave("output/plots/dddi-attitudes.svg", p.di.att, width = 13, height = 8)
+
+}
+
+
+
+#### Regression Output ####
+tidy(lm.ndu, conf.int = TRUE) %>%
+  format.p() %>%
+  prep.table() %>%
+  flextable() %>%
+  save_as_docx(path = "output/regression output/ndu-tidy.docx")
+
+
+dd.total ~ duid.att.risk + duid.att.sanction + duid.att.peer

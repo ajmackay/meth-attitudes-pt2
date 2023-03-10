@@ -1,3 +1,8 @@
+#### Flextasble defaults ####
+set_flextable_defaults(table.layout = "autofit",
+                       theme_fun = "theme_vanilla")
+
+#### decimal places ####
 #### Prep Table ####
 prep.table <- function(dat, dp = 2){
   # Turning names into title
@@ -18,6 +23,14 @@ format.p <- function(dat){
       mutate(p = scales::pvalue(p))
   }
 }
+
+format.p <- function(dat, p.value = p.value){
+
+  dat %>%
+    mutate(p.value = scales::pvalue(p.value))
+}
+
+
 
 # format.p(anova.tbl)
 
