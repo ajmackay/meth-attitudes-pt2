@@ -21,20 +21,48 @@ mgp.constrained <- sem(mgp.model, dat, group = "ma.ingest", group.equal = c("int
 summary(mgp.constrained)
 
 # Comparing two models
-anova(mgp.free, mgp.constrained) %>% broom::tidy()
+anova(mgp.free, mgp.constrained) #%>% broom::tidy()
 
 
 #### Comparing single constraints ####
 # Risk
 mgp.risk.model <- c("dd.total ~ c(b1, b1) * duid.att.risk + duid.att.sanction + duid.att.peer")
 mgp.risk <- sem(mgp.risk.model, dat, group = "ma.ingest")
-summary(mgp.risk)
+
 
 anova(mgp.free, mgp.risk)
 # DUID Attitudes toward risk varies between groups
 
-#
+# Sanction
+mgp.sanction.model <-  c("dd.total ~ c(b1, b1) * duid.att.sanction + duid.att.risk + duid.att.peer")
+mgp.sanction <- sem(mgp.sanction.model, dat, group = "ma.ingest")
 
+anova(mgp.free, mgp.sanction)
+
+# Peer
+mgp.peer.model <- c("dd.total ~ c(b1, b1) * duid.att.peer + duid.att.risk + duid.att.sanction")
+mgp.peer <- sem(mgp.peer.model, dat, group = "ma.ingest")
+
+anova(mgp.free, mgp.peer)
+
+
+#### Piecewise SEM  ####
+# (basically does all the above stuff in one go lol)
+model.psem <- piecewiseSEM::psem(lm(dd.total ~ duid.att.risk + duid.att.sanction + duid.att.peer, dat))
+
+piecewiseSEM::multigroup(model.psem, group = "ma.ingest")
+
+#### Models ####
+ma.lm <- lm(dd.total ~ duid.att.risk + duid.att.sanction + duid.att.peer, filter(dat, ma.ingest))
+nma.lm <- lm(dd.total ~ duid.att.risk + duid.att.sanction + duid.att.peer, filter(dat, !ma.ingest))
+
+
+
+
+#### Checking Normality ####
+# Can use Kolmogorov-Smirnov as sample size > 50 (yay)
+ols_test_normality(ma.lm)
+ols_test_normality(nma.lm)
 
 
 #### Sandbox ####

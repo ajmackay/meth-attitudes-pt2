@@ -1,3 +1,26 @@
+#### Exploring Sanctions ####
+duid.att.df %>% filter(id %in% dat$id) %>%
+  left_join(select(dd.df, -ma.ingest), by = "id") %>%
+  ggplot(aes(x = duid.att.sanction, y = dd.total)) +
+  geom_jitter(height = 0, width = 0.02) +
+  facet_wrap(~ma.ingest, scales = "free") + theme_light()
+
+
+#### Exploring Peer Attitudes ####
+duid.att.df %>% filter(id %in% dat$id) %>%
+  left_join(select(dd.df, -ma.ingest), by = "id") %>%
+  ggplot(aes(x = duid.att.peer, y = dd.total)) +
+  geom_jitter(height = 0, width = 0.02) +
+  facet_wrap(~ma.ingest, scales = "free") + theme_light()
+
+### Exploring Risk Attitudes ####
+duid.att.df %>% filter(id %in% dat$id) %>%
+  left_join(select(dd.df, -ma.ingest), by = "id") %>%
+  ggplot(aes(x = duid.att.risk, y = dd.total)) +
+  geom_jitter(height = 0, width = 0.02) +
+  facet_wrap(~ma.ingest, scales = "free") + theme_light()
+
+
 # Model including state anger ---------------------------------------------
 model.vars2 <- c(
   "age",
@@ -18,29 +41,29 @@ model <- lm(dd.total ~ ., data = select(ma.final, model.vars2))
 # Best possible based on adj R2
 all.poss <- ols_step_all_possible(model)
 
-best.poss <- all.poss %>% 
-  group_by(n) %>% 
-  arrange(n, desc(adjr)) %>% 
-  slice(1) %>% 
+best.poss <- all.poss %>%
+  group_by(n) %>%
+  arrange(n, desc(adjr)) %>%
+  slice(1) %>%
   select(n, predictors, rsquare, adjr, aic)
 
-all.poss %>% 
-  group_by(n) %>% 
-  arrange(n, desc(adjr)) %>% 
-  slice(1) %>% 
-  pivot_longer(cols = c(adjr, aic), names_to = "measure") %>% 
-  
+all.poss %>%
+  group_by(n) %>%
+  arrange(n, desc(adjr)) %>%
+  slice(1) %>%
+  pivot_longer(cols = c(adjr, aic), names_to = "measure") %>%
+
   ggplot(aes(x = n, y = value)) +
   geom_point(size = 2) +
   geom_line() +
-  
+
   scale_x_continuous(breaks = seq(1, 8)) +
   labs(y = element_blank(),
        x = "N") +
-  
+
   facet_wrap(~measure, scales = "free", ncol = 2,
              labeller = as_labeller(c(
-               `adjr` =  "Adjusted R2", 
+               `adjr` =  "Adjusted R2",
                `aic` =  "AIC")))
 
 
@@ -76,24 +99,24 @@ survey.screened %>% filter(id %in% x.id) %>% view
 
 
 # Tings -------------------------------------------------------------------
-summ.df %>% select(id, ma.ingest, dems.full, audit.full, trait.full, dd.full, duid.att.full) %>% 
-  filter(!ma.ingest) %>% 
+summ.df %>% select(id, ma.ingest, dems.full, audit.full, trait.full, dd.full, duid.att.full) %>%
+  filter(!ma.ingest) %>%
   replace_with_na(replace = list(dems.full = FALSE, audit.full = FALSE, trait.full = FALSE, dd.full = FALSE, duid.att.full = FALSE)) %>%
   filter(duid.att.full) %>% view
   summarise(duid.present = sum(duid.att.full, na.rm = TRUE))
 
-  
+
 dems.df %>% filter(id == 75)
 
 
 
 
 
-audit.id <- audit.df %>% 
-  filter(!is.na(audit.total)) %>% 
+audit.id <- audit.df %>%
+  filter(!is.na(audit.total)) %>%
   pull(id)
 
-audit.df %>% 
+audit.df %>%
   filter(!audit.full,
          id %in% alcohol.ids)
 
@@ -109,25 +132,25 @@ ggplot(df, aes(x, y)) +
 
 
 
-duid.att.df %>% 
-  select(-c(id, duid.att.total)) %>% 
+duid.att.df %>%
+  select(-c(id, duid.att.total)) %>%
   filter(if_all(.cols = everything(), !is.na(.)))
   filter(across(.cols = everything(), ~!is.na(.)))
-  
-  
-duid.att.df %>% 
-  select(-c(id, duid.att.total)) %>% 
+
+
+duid.att.df %>%
+  select(-c(id, duid.att.total)) %>%
   filter(across(.cols = everything(), ~!is.na(.x)))
-  
-duid.att.df %>% 
-  select(-c(id, duid.att.total)) %>% 
+
+duid.att.df %>%
+  select(-c(id, duid.att.total)) %>%
   filter(if_all(.cols = everything(), ~!is.na(.x)))
 
 
 
 # Create column that counts the number of NAs across columns per observation
-duid.att.df %>% 
-  rowwise() %>% 
+duid.att.df %>%
+  rowwise() %>%
   mutate(count.na = sum(is.na(.))) %>% relocate(count.na)
 
 df %>% filter_at(vars(type,company),all_vars(!is.na(.)))
@@ -150,20 +173,20 @@ a %>%
 
 
 
-%>% 
+%>%
   map_df(., ~sum(is.na(.))) %>% view()
 
 
-survey.screened %>% 
+survey.screened %>%
   rename_with(~str_c("state.", seq(1, 14)),
-              .cols = q146.1:q146.14) %>% 
+              .cols = q146.1:q146.14) %>%
   mutate(across(starts_with("state."), ~case_when(
     .x == "Not at all" ~ 1,
     .x == "Somewhat" ~ 2,
     .x == "Moderately so" ~ 3,
     .x == "Very much so" ~ 4)),
-    state.total =  %>% 
-  select(starts_with("state.")) %>% 
+    state.total =  %>%
+  select(starts_with("state.")) %>%
   map_df(., ~sum(is.na(.)))
 
 S_Ang_F_1 = as.numeric(fct_recode(as_factor(Q146_1),
@@ -252,8 +275,8 @@ S_Ang_P_5 = as.numeric(fct_recode(as_factor(Q146_14),
 ),
 S_Ang_F_Total = (S_Ang_F_1 + S_Ang_F_2 + S_Ang_F_3 + S_Ang_F_4 + S_Ang_F_5),
 S_Ang_P_Total = (S_Ang_P_1 + S_Ang_P_2 + S_Ang_P_3 + S_Ang_P_4 + S_Ang_P_5),
-S_Ang_V_Total = (S_Ang_V_1 + S_Ang_V_2 + S_Ang_V_3 + S_Ang_V_4), 
-S_Ang_Total = (S_Ang_F_1 + S_Ang_F_2 + S_Ang_F_3 + S_Ang_F_4 + S_Ang_F_5 + 
+S_Ang_V_Total = (S_Ang_V_1 + S_Ang_V_2 + S_Ang_V_3 + S_Ang_V_4),
+S_Ang_Total = (S_Ang_F_1 + S_Ang_F_2 + S_Ang_F_3 + S_Ang_F_4 + S_Ang_F_5 +
                  S_Ang_P_1 + S_Ang_P_2 + S_Ang_P_3 + S_Ang_P_4 + S_Ang_P_5 +
                  S_Ang_V_1 + S_Ang_V_2 + S_Ang_V_3 + S_Ang_V_4),
 ## Trait Anger

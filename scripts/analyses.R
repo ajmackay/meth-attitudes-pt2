@@ -152,3 +152,6 @@ tidy(lm.ndu, conf.int = TRUE) %>%
 
 
 dd.total ~ duid.att.risk + duid.att.sanction + duid.att.peer
+
+#### Comparing dems between groups ####
+dat.dems %>% select(ma.ingest, age, sex, education, area.live) %>% tbl_summary(by = ma.ingest) %>% add_p()

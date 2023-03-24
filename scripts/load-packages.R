@@ -11,8 +11,8 @@ packages <- c("janitor",
               "DT",
               "patchwork",
               "tidyverse",
-              "olsrr",
-              "broom", # For regression results
+              "olsrr", # For regression checking and results
+              "broom", # For tidy regression results
               "gtsummary",
               "officer",
               "shadowtext",

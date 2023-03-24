@@ -87,7 +87,13 @@ dat <- select(summ.df, id, ma.ingest) %>%
   # DUID
   left_join(select(duid.att.df, id, duid.att.risk, duid.att.sanction, duid.att.peer, duid.att.mean))
 
+dat.dems <- select(summ.df, id, ma.ingest, age, sex, education, area.live) %>%
+  filter(id %in% c(ma.ids, n.ndu.ids)) %>%
+  # DDDI
+  left_join(select(dd.df, id, dd.ne.total, dd.ad.total, dd.rd.total, dd.total)) %>%
 
+  # DUID
+  left_join(select(duid.att.df, id, duid.att.risk, duid.att.sanction, duid.att.peer, duid.att.mean))
 
 
 
