@@ -57,7 +57,11 @@ ma.lm <- lm(dd.total ~ duid.att.risk + duid.att.sanction + duid.att.peer, filter
 nma.lm <- lm(dd.total ~ duid.att.risk + duid.att.sanction + duid.att.peer, filter(dat, !ma.ingest))
 
 
-
+#### T test between groups for DD ####
+dat %>% t_test(dd.total ~ ma.ingest) %>%
+  adjust_pvalue() %>%
+  add_significance("p.adj") %>%
+  mutate(p.adj = scales::pvalue(p.adj))
 
 #### Checking Normality ####
 # Can use Kolmogorov-Smirnov as sample size > 50 (yay)
