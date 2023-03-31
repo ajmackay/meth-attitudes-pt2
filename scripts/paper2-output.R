@@ -30,14 +30,15 @@ p.att.score <- ggboxplot(dat.long, x = "att.subscale", y = "value", width = 0.5,
   stat_pvalue_manual(stat.test, x = "att.subscale", y.position = 7.5, label = "p.adj") +
   labs(fill = element_blank(),
        x = "Attitude Factor",
-       y = "Score") +
+       y = "Score (Higher = More Favourable)") +
   scale_fill_brewer(palette = "OrRd") +
   scale_y_continuous(breaks = seq(2, 7, 1)) +
 
   theme(axis.title = element_text(face = 'bold'))
 
-ggsave(p.att.score, width = 900, height = 700, units = 'px', dpi = 95, filename = "output/attitude-boxplot.png")
-
+if(FALSE){
+  ggsave(p.att.score, width = 900, height = 700, units = 'px', dpi = 95, filename = "output/attitude-boxplot.png")
+}
 
 
 # Summary of Data ---------------------------------------------------------

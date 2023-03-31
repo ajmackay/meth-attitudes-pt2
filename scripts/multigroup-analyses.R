@@ -63,6 +63,8 @@ dat %>% t_test(dd.total ~ ma.ingest) %>%
   add_significance("p.adj") %>%
   mutate(p.adj = scales::pvalue(p.adj))
 
+t.test(dd.total ~ ma.ingest, data = dat)
+
 #### Checking Normality ####
 # Can use Kolmogorov-Smirnov as sample size > 50 (yay)
 ols_test_normality(ma.lm)
