@@ -21,6 +21,7 @@ packages <- c("janitor",
               "gdtools" # For font name
               ,"lavaan" # path analysis (latent varable analysis)
               ,"ggfortify" # Regression assumptions plots as ggplot
+              # ,"psych" # Functions for psychological research (Cronbach Alpha)
               )
 
 librarian::shelf(packages)
