@@ -38,4 +38,10 @@ cfa.measure <- '
   peers = ~friends + dumb
 '
 
+# Saving Model
 cfa.att <- cfa(cfa.measure, data = select(duid.att.items, -c(id, ma.ingest)))
+
+# Intercorrelations between latent factors
+lavInspect(cfa.att, 'cov.lv')
+
+summary(cfa.att)
