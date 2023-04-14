@@ -727,7 +727,7 @@ duid.inst.att.df <- survey.screened %>%
     duid.inst.full = !is.na(duid.inst.total),
 
     # Calculate factor scores for attitudes --> I think I need to do the mean not rowSums...
-    duid.att.risk = select(., duid.att.overrated, duid.att.police, duid.att.caught) %>% rowMeans(na.rm = FALSE),
+    duid.att.risk = select(., duid.att.overrated, duid.att.police, duid.att.caught, duid.att.high) %>% rowMeans(na.rm = FALSE),
     duid.att.sanction = select(., duid.att.strict, duid.att.jail, duid.att.lose) %>% rowMeans(na.rm = FALSE),
     duid.att.peer = select(., duid.att.friends, duid.att.dumb) %>% rowMeans(na.rm = FALSE),
 
