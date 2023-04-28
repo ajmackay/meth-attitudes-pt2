@@ -7,7 +7,7 @@ source("scripts/functions.R")
 
 load("objects/all-objects.RData")
 
-#### Factor Analysis and Reliability ####
+#### Reliability ####
 
 duid.att.items <- duid.att.df %>%
   filter(id %in% dat$id) %>%
@@ -15,15 +15,15 @@ duid.att.items <- duid.att.df %>%
 
 # Risk
 alpha.risk <- psych::alpha(select(duid.att.items, duid.att.overrated, duid.att.police, duid.att.caught, duid.att.high))
-fa.risk <- psych::fa(select(duid.att.items, duid.att.overrated, duid.att.police, duid.att.caught, duid.att.high))
+# fa.risk <- psych::fa(select(duid.att.items, duid.att.overrated, duid.att.police, duid.att.caught, duid.att.high))
 
 # Sanctions
 alpha.sanctions <- psych::alpha(select(duid.att.items, duid.att.strict, duid.att.jail, duid.att.lose))
-fa.sanctions <- psych::fa(select(duid.att.items, duid.att.strict, duid.att.jail, duid.att.lose))
+# fa.sanctions <- psych::fa(select(duid.att.items, duid.att.strict, duid.att.jail, duid.att.lose))
 
 # Peer Attitudes
 alpha.peer <- psych::alpha(select(duid.att.items, duid.att.friends, duid.att.dumb))
-fa.peer <- psych::fa(select(duid.att.items, duid.att.friends, duid.att.dumb))
+# fa.peer <- psych::fa(select(duid.att.items, duid.att.friends, duid.att.dumb))
 
 
 #### Confirmatory Factor Analysis ####
@@ -41,7 +41,9 @@ cfa.measure <- '
 # Saving Model
 cfa.att <- cfa(cfa.measure, data = select(duid.att.items, -c(id, ma.ingest)))
 
-# Intercorrelations between latent factors
+# Intercorrelations/co-variance between latent factors
 lavInspect(cfa.att, 'cov.lv')
+
+inspect(cfa.att, 'std')
 
 summary(cfa.att)
