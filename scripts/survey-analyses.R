@@ -31,11 +31,11 @@ names(duid.att.items) <- names(duid.att.items) %>% str_remove('duid.att.')
 
 # Measurement Model
 cfa.measure <- '
-  risk = ~overrated + police + caught + high
+  risk =~ overrated + police + caught + high
 
-  sanctions = ~strict + jail + lose
+  sanctions =~ strict + jail + lose
 
-  peers = ~friends + dumb
+  peers =~ friends + dumb
 '
 
 # Saving Model
@@ -47,3 +47,5 @@ lavInspect(cfa.att, 'cov.lv')
 inspect(cfa.att, 'std')
 
 summary(cfa.att)
+
+cfa.att@Fit
