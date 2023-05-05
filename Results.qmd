@@ -1,0 +1,43 @@
+---
+title: "Results"
+format: docx
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| echo: false
+load('objects/all-objects.RData')
+source('script/functions.R')
+
+librarian::shelf(packages)
+
+set.default.ft()
+
+```
+
+## Reliability
+
+```{r}
+#| echo: false
+
+
+
+```
+
+## CFA
+
+### Factor Loadings
+
+```{r}
+flextable(tbl.cfa.loadings) %>% colformat_double()
+summary(cfa.att, standardized = TRUE, fit.measures = TRUE)
+```
+
+## Multigroup Analyses
+
+```{r}
+#| echo: false
+piecewiseSEM::multigroup(model.psem, group = "ma.ingest")
+```

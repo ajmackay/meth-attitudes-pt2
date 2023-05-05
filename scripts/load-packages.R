@@ -22,7 +22,7 @@ packages <- c("janitor",
               ,"lavaan" # path analysis (latent varable analysis)
               ,"ggfortify" # Regression assumptions plots as ggplot
               ,"psych" # Functions for psychological research (Cronbach Alpha)
-              )
+              ,"AzTools")
 
 librarian::shelf(packages)
 

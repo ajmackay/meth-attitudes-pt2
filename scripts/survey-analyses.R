@@ -30,7 +30,7 @@ alpha.peer <- psych::alpha(select(duid.att.items, duid.att.friends, duid.att.dum
 names(duid.att.items) <- names(duid.att.items) %>% str_remove('duid.att.')
 
 # Measurement Model
-cfa.measure <- '
+cfa.m1 <- '
   risk =~ overrated + police + caught + high
 
   sanctions =~ strict + jail + lose
@@ -39,10 +39,31 @@ cfa.measure <- '
 '
 
 # Saving Model
-cfa.att <- cfa(cfa.measure, data = select(duid.att.items, -c(id, ma.ingest)))
+cfa.att <- cfa(cfa.m1, duid.att.items)
+
+inspect(cfa.att, 'cov.lv')
+
+summary(cfa.att, standardized = TRUE, fit.measures = TRUE)
+
+standardizedsolution(cfa.att)
+
+tbl.cfa.loadings <- inspect(cfa.att, 'std')$lambda %>% data.frame() %>%  rownames_to_column("Variable") %>%
+  mutate(across(where(is.numeric), ~round(.x, 3)))
+
+tbl.fit
+
+cfa.m2 <- '
+  risk =~ overrated + caught + high
+  sanctions =~ strict + jail + lose
+  peers =~ friends + dumb
+'
+
+cfa.att2 <- cfa(cfa.m2, data = duid.att.items)
+
+summary(cfa.att2, standardized = TRUE, fit.measures = TRUE)
 
 # Intercorrelations/co-variance between latent factors
-lavInspect(cfa.att, 'cov.lv')
+
 
 inspect(cfa.att, 'std')
 

@@ -1,3 +1,14 @@
+set_flextable_defaults(
+  digits = 3,
+  decimal.mark = ",",
+  big.mark = " ",
+  na_str = "<na>"
+)
+
+head(airquality) |>
+  mutate(rnum = runif(6, min = 100000, max = 10000000)) |>
+  qflextable()
+
 #### Exploring Sanctions ####
 duid.att.df %>% filter(id %in% dat$id) %>%
   left_join(select(dd.df, -ma.ingest), by = "id") %>%

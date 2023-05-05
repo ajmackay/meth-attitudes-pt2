@@ -1,6 +1,26 @@
-#### Flextasble defaults ####
-set_flextable_defaults(table.layout = "autofit",
-                       theme_fun = "theme_vanilla")
+#### Flextable defaults ####
+set.default.ft <- function(font.family = 'Calibri',
+                           font.size = 10,
+                           layout = 'autofit',
+                           padding = 6,
+                           theme_fun = 'theme_vanilla',
+                           digits = 3, ...) {
+
+  flextable::set_flextable_defaults(
+    font.family = font.family,
+    font.size = font.size,
+    layout = layout,
+    padding = padding,
+    theme_fun = theme_fun,
+    digits = digits)
+
+  if(digits != 3){
+    cat(crayon::red("Use colformat_double() to adjust digits"))
+  }
+
+  cat(crayon::green("Flextable Default Set"))
+
+}
 
 #### decimal places ####
 #### Prep Table ####
