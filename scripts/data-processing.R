@@ -778,56 +778,41 @@ ma.dems <- ma.df %>%
 
 
 #### Dat ####
-# Completed demographic ids
+# Ids of completed assessments
 dems.ids <- dems.df %>% filter(dems.full) %>% pull(id)
 
-# Completed SDS ids
 sds.ids <- ma.df %>%
   filter(sds.full) %>% pull(id)
 
-# Completed DD ids
 dd.ids <- dd.df %>% filter(dd.full) %>% pull(id)
 
-#### Anger ####
 state.ids <- state.df %>% filter(state.full) %>% pull(id)
 
 trait.ids <- trait.df %>% filter(trait.full) %>% pull(id)
 
-#### AUDIT ####
 audit.ids <- audit.df %>% filter(audit.full) %>% pull(id)
 
-#### K6 Psychological Distress ####
 k6.ids <- k6.df %>%
   filter(k6.full) %>%
   pull(id)
 
-#### DUID ####
-##### Instances #####
 duid.inst.ids <- duid.inst.df %>%
   filter(duid.inst.full) %>% pull(id)
 
-##### Attitudes #####
 duid.att.ids <- duid.att.df %>%
   filter(duid.att.full) %>% pull(id)
 
-##### Strategies #####
 duid.strat.ids <- duid.strat.df %>%
   filter(duid.strat.full) %>% pull(id)
 
-
-#### DUI ####
-##### Attitudes #####
 dui.att.ids <- dui.att.df %>%
   filter(dui.att.full) %>% pull(id)
 
-##### Strategies #####
 dui.strat.ids <- dui.strat.df %>%
   filter(dui.strat.full) %>% pull(id)
 
-
-
-# Sample ------------------------------------------------------------------
-#### Sample of Meth users ####
+#### Paper 2 Sample ####
+# Meth Users with full DD and DUID Att
 ma.ids <- select(summ.df, id, ma.ingest) %>%
   filter(
     ma.ingest
@@ -835,10 +820,7 @@ ma.ids <- select(summ.df, id, ma.ingest) %>%
     ,id %in% duid.att.ids
   ) %>% pull(id)
 
-
-
-
-#### Sample of non-drug users
+# Non-Drug Users with full DD and DUID Att
 n.ndu.ids <- select(summ.df, id, ma.ingest) %>%
   filter(
     !ma.ingest
