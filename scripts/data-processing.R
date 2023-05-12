@@ -1,42 +1,7 @@
-# source("scripts/load-packages.R")
+if(!"packages" %in% ls()) source("scripts/load-packages.R")
+if(!exists('.load.data')) source('scripts/load-data.R')
 
-
-# Import ------------------------------------------------------------------
-survey.files <- list.files("data/", pattern = "*Meth-Survey.csv")
-survey.file <- survey.files[length(survey.files)]
-
-#### File moving ####
-to.move <- survey.files[!survey.files == survey.file]
-old.path <- str_c("data/", to.move)
-new.path <- str_c("data/archive/", to.move)
-
-if(!is_empty(to.move)){
-
-  if(file.copy(old.path, new.path)){
-    file.remove(old.path)
-  }
-
-  # Headers
-  survey.headers <- read_csv(str_c("data/", survey.file), n_max = 1) %>%
-    names() %>%
-    tolower() %>%
-    str_replace("\\.\\.\\.", "\\.") %>%
-    str_replace("\\_", "\\.") %>%
-    str_replace("duration \\(in seconds\\)", "duration")
-
-  survey.raw <- read_csv(str_c("data/", survey.file), skip = 2)
-
-  colnames(survey.raw) <- survey.headers
-
-  survey.raw <- survey.raw %>%
-    mutate(id = row_number(),
-           .before = 1)
-
-  saveRDS(survey.raw, file = "objects/survey-raw.RData")
-
-}else survey.raw <- readRDS("objects/survey-raw.RData")
-
-# Contains all responses (cleaned - not filtered)
+#### Basic Cleaning ####
 survey.df <- survey.raw %>%
   mutate(ma.ingest = fct_recode(as_factor(q47)),
             ma.ingest = ma.ingest == "Yes",
@@ -47,8 +12,6 @@ survey.df <- survey.raw %>%
 
          .keep = "unused")
 
-survey.df %>%
-  filter(ma.ingest, status!= "Spam", ma.most.common, finished)
 
 # Data Processing -------------------------------------------------------------------
 #### Screened ####
@@ -814,8 +777,97 @@ ma.dems <- ma.df %>%
   mutate(dependent = dependent == "MUD")
 
 
+#### Dat ####
+# Completed demographic ids
+dems.ids <- dems.df %>% filter(dems.full) %>% pull(id)
+
+# Completed SDS ids
+sds.ids <- ma.df %>%
+  filter(sds.full) %>% pull(id)
+
+# Completed DD ids
+dd.ids <- dd.df %>% filter(dd.full) %>% pull(id)
+
+#### Anger ####
+state.ids <- state.df %>% filter(state.full) %>% pull(id)
+
+trait.ids <- trait.df %>% filter(trait.full) %>% pull(id)
+
+#### AUDIT ####
+audit.ids <- audit.df %>% filter(audit.full) %>% pull(id)
+
+#### K6 Psychological Distress ####
+k6.ids <- k6.df %>%
+  filter(k6.full) %>%
+  pull(id)
+
+#### DUID ####
+##### Instances #####
+duid.inst.ids <- duid.inst.df %>%
+  filter(duid.inst.full) %>% pull(id)
+
+##### Attitudes #####
+duid.att.ids <- duid.att.df %>%
+  filter(duid.att.full) %>% pull(id)
+
+##### Strategies #####
+duid.strat.ids <- duid.strat.df %>%
+  filter(duid.strat.full) %>% pull(id)
+
+
+#### DUI ####
+##### Attitudes #####
+dui.att.ids <- dui.att.df %>%
+  filter(dui.att.full) %>% pull(id)
+
+##### Strategies #####
+dui.strat.ids <- dui.strat.df %>%
+  filter(dui.strat.full) %>% pull(id)
+
+
+
+# Sample ------------------------------------------------------------------
+#### Sample of Meth users ####
+ma.ids <- select(summ.df, id, ma.ingest) %>%
+  filter(
+    ma.ingest
+    ,id %in% dd.ids
+    ,id %in% duid.att.ids
+  ) %>% pull(id)
+
+
+
+
+#### Sample of non-drug users
+n.ndu.ids <- select(summ.df, id, ma.ingest) %>%
+  filter(
+    !ma.ingest
+    ,id %in% dd.ids
+    ,id %in% duid.att.ids
+  ) %>% pull(id)
+
+
+# DF with dd and attitudes ------------------------------------------------
+dat <- select(summ.df, id, ma.ingest) %>%
+  filter(id %in% c(ma.ids, n.ndu.ids)) %>%
+  # DDDI
+  left_join(select(dd.df, id, dd.ne.total, dd.ad.total, dd.rd.total, dd.total)) %>%
+
+  # DUID
+  left_join(select(duid.att.df, id, duid.att.risk, duid.att.sanction, duid.att.peer, duid.att.mean))
+
+dat.dems <- select(summ.df, id, ma.ingest, age, sex, education, area.live) %>%
+  filter(id %in% c(ma.ids, n.ndu.ids)) %>%
+  # DDDI
+  left_join(select(dd.df, id, dd.ne.total, dd.ad.total, dd.rd.total, dd.total)) %>%
+
+  # DUID
+  left_join(select(duid.att.df, id, duid.att.risk, duid.att.sanction, duid.att.peer, duid.att.mean))
+
 #### Save Image ####
 save.image(file = "objects/all-objects.RData")
 message(crayon::green("Data Processing Successfully Run and objects saved"))
+
+.data.processing <- logical()
 
 

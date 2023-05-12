@@ -24,6 +24,8 @@ packages <- c("janitor",
               ,"psych" # Functions for psychological research (Cronbach Alpha)
               ,"AzTools")
 
+if(!'librarian' %in% installed.packages()) install.packages('librarian')
+
 librarian::shelf(packages)
 
 message(crayon::green(str_c("Packages Loaded Successfully: ", glue::glue_collapse(packages, sep = ", ", last = " and ") )))

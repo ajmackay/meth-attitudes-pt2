@@ -1,10 +1,5 @@
-# Reliability and Factor Loadings
-if(!"packages" %in% ls()){
-  source("scripts/load-packages.R")
-}
-
+if(!"packages" %in% ls()) source("scripts/load-packages.R")
 source("scripts/functions.R")
-
 load("objects/all-objects.RData")
 
 #### Reliability ####

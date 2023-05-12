@@ -1,3 +1,9 @@
+#### Load all objects ####.
+# Loads objects - throws a message if the last date of object save is different to data processing
+function(objects = 'all-objects'){
+
+}
+
 #### Flextable defaults ####
 set.default.ft <- function(font.family = 'Calibri',
                            font.size = 10,
