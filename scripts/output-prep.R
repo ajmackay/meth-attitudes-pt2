@@ -1,8 +1,19 @@
-if(!"packages" %in% ls()) source("scripts/load-packages.R")
+if (!"packages" %in% ls()) source("scripts/load-packages.R")
 
 source("scripts/functions.R")
 
 load("objects/all-objects.RData")
+
+# For ARSC Conference
+#### Age and Gender Breakdown ####
+tbl.dems <- dat.dems %>%
+  mutate(ma.ingest = if_else(ma.ingest, "MA User", "Non-Drug User"),
+         any.psychiatric.diagnosis = if_else(any.psychiatric.diagnosis, "Yes", "No")) %>%
+  select(ma.ingest, Age = age, education,  ever.used.alcohol = alcohol.ever, employment.status, license.status, psychiatric.diagnosis = any.psychiatric.diagnosis, residential.area = area.live, Sex = sex) %>%
+  prep.names() %>%
+  ft.summary(summ.by = "Ma Ingest", include.p = TRUE)
+
+if (FALSE) save.table(tbl.dems, "demographics")
 
 #### Attitudes boxplot ####
 dat.long <- dat %>%
@@ -10,11 +21,12 @@ dat.long <- dat %>%
   mutate(
     # att.subscale = factor(att.subscale, levels = c("duid.att.risk", "duid.att.sanction", "duid.att.peer")),
     att.subscale = case_when(
-      att.subscale == "duid.att.risk" ~ "Risks",
-      att.subscale == "duid.att.sanction" ~ "Sanctions",
-      att.subscale == "duid.att.peer" ~ "Peer Attitudes"
+      att.subscale == "duid.att.risk" ~ "Favourable Attitude to Risks",
+      att.subscale == "duid.att.sanction" ~ "Unfavourable Attitude to \nSanctions",
+      att.subscale == "duid.att.peer" ~ "Favourable Peer Attitudes"
     ),
-    group = if_else(ma.ingest, "Methamphetamine Users", "Non-Drug Users"))
+    group = if_else(ma.ingest, "Methamphetamine Users", "Non-Drug Users")
+  )
 
 stat.test <- dat.long %>%
   group_by(att.subscale) %>%
@@ -26,29 +38,36 @@ stat.test <- dat.long %>%
 
 p.att.score <- ggboxplot(dat.long, x = "att.subscale", y = "value", width = 0.5, fill = "group") +
   stat_pvalue_manual(stat.test, x = "att.subscale", y.position = 7.5, label = "p.adj") +
-  labs(fill = element_blank(),
-       x = "Attitude Factor",
-       y = "Score (Higher = More Favourable)") +
+  labs(
+    fill = element_blank(),
+    x = "Attitude Factor",
+    y = "Score"
+  ) +
   scale_fill_brewer(palette = "OrRd") +
   scale_y_continuous(breaks = seq(2, 7, 1)) +
 
-  theme(axis.title = element_text(face = 'bold'))
+  theme(axis.title = element_text(face = "bold"))
 
-if(FALSE){
-  ggsave(p.att.score, width = 900, height = 700, units = 'px', dpi = 95, filename = "output/attitude-boxplot.png")
+if (FALSE) {
+  ggsave(p.att.score, width = 900, height = 700, units = "px", dpi = 95, filename = "output/attitude-boxplot.png")
 }
 
 
 # Summary of Data ---------------------------------------------------------
 t.summ <- select(dat, -c(id, dd.ne.total, dd.ad.total, dd.rd.total)) %>%
   mutate(ma.ingest = if_else(ma.ingest, "MA User", "Non-Drug User")) %>%
-  tbl_summary(by = ma.ingest,
-              statistic = list(all_continuous() ~ "{mean} ({sd})"),
-              label = list(dd.total ~ "DDDI Total",
-                           duid.att.mean ~ "DUID Attitude Mean",
-                           duid.att.risk ~ "DUID Attitude (Risk)",
-                           duid.att.sanction ~ "DUID Attitude (Sanction)",
-                           duid.att.peer ~ "DUID Attitude (Peer)")) %>% add_p()
+  tbl_summary(
+    by = ma.ingest,
+    statistic = list(all_continuous() ~ "{mean} ({sd})"),
+    label = list(
+      dd.total ~ "DDDI Total",
+      duid.att.mean ~ "DUID Attitude Mean",
+      duid.att.risk ~ "DUID Attitude (Risk)",
+      duid.att.sanction ~ "DUID Attitude (Sanction)",
+      duid.att.peer ~ "DUID Attitude (Peer)"
+    )
+  ) %>%
+  add_p()
 
 t.summ
 
@@ -59,10 +78,10 @@ t.summ
 
 dat %>%
   mutate(dd.subscale = factor(dd.subscale, levels = c("dd.ad.total", "dd.ne.total", "dd.rd.total"))) %>%
-
   ggboxplot(x = "dd.subscale", y = "value", width = 0.5, color = "ma.ingest")
 stat_pvalue_manual(
-  pwc, label = "p.adj",
+  pwc,
+  label = "p.adj",
   y.position = c(45, 50, 57),
   size = 3
 )

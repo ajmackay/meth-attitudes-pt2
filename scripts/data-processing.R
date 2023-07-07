@@ -750,7 +750,8 @@ if(FALSE){
 summ.df <- dems.df %>%
   left_join(select(audit.df, id, audit.total, audit.risky, audit.full)) %>%
   left_join(select(ma.df, id, ma.use.peak, sds.total, sds.full, ma.type, ma.use.age)) %>%
-  left_join(select(k6.df, id, k6.total, k6.full, psychiatric.diagnosis)) %>%
+  left_join(select(k6.df, id, k6.total, k6.full, psychiatric.diagnosis) %>%
+              mutate(any.psychiatric.diagnosis = !is.na(psychiatric.diagnosis))) %>%
   left_join(select(staxi.df, id, state.total, state.full, trait.total, trait.full)) %>%
   left_join(select(dd.df, id, dd.ne.total, dd.ad.total, dd.rd.total, dd.total, dd.full)) %>%
   left_join(select(dui.inst.att.df, id, dui.inst.revoked, dui.att.total, dui.att.full)) %>%
@@ -846,9 +847,29 @@ dat.dems <- select(summ.df, id, ma.ingest, age, sex, education, area.live) %>%
   # DUID
   left_join(select(duid.att.df, id, duid.att.risk, duid.att.sanction, duid.att.peer, duid.att.mean))
 
+
+
+#### Demographics ####
+id.sample <- dat$id
+
+dat.dems <- summ.df %>%
+  filter(id %in% id.sample, dems.full) %>%
+  select(id, ma.ingest, age, sex, ethnicity, marital.status, education, employment.status,
+         area.live, license.status, ma.use.peak, sds.total, ma.type, ma.use.age, psychiatric.diagnosis,
+         audit.total, alcohol.ever) %>%
+  mutate(any.psychiatric.diagnosis = !is.na(psychiatric.diagnosis))
+
+
+
+
 #### Save Image ####
 save.image(file = "objects/all-objects.RData")
 message(crayon::green("Data Processing Successfully Run and objects saved"))
+
+
+
+
+
 
 .data.processing <- logical()
 

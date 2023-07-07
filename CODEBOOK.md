@@ -33,14 +33,14 @@ Does one of two things:
 
 ### 
 
-## Variable Information
+## Assessments
 
 ### Attitudes Toward DUID
 
 #### Variables
 
 | Variable Name       | Questionnaire Item                                                    |
-|----------------------|--------------------------------------------------|
+|---------------------|-----------------------------------------------------------------------|
 | duid.att.friends    | Most of my friends think its OK to take drugs and drive               |
 | duid.att.high       | It's OK to drive after taking drugs as long as you're not too high    |
 | duid.att.jail       | People who take drugs and drive should go to jail                     |
@@ -57,14 +57,14 @@ Does one of two things:
 ### Instances of DUI (only shows to those who have drunk alcohol)
 
 | Variable         | Questionnaire Item                                                                                                                                                  |
-|--------------------|----------------------------------------------------|
+|------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | dui.inst.revoked | Have you ever had your driver's license or learner's permit suspended or revoked for moving violations related to alcohol use?                                      |
 | dui.inst.hurt    | Have you ever done things that could have easily hurt you or someone else - like speeding or dirivin or using heavy machinery while under the influence of alcohol? |
 
 ### Attitudes toward DUI
 
 | Variable           | Questionnaire Item                                                       |
-|---------------------|---------------------------------------------------|
+|--------------------|--------------------------------------------------------------------------|
 | dui.att.friends    | Most of my friends think its OK to drink and drive                       |
 | dui.att.drunk      | It's OK to drive after drinking as long as you're not too drunk          |
 | dui.att.jail       | People who drink and drive should go to jail                             |
@@ -79,7 +79,7 @@ Does one of two things:
 ### Strategies against DUI
 
 | Variable            | Questionnaire Item                                                                                                |
-|--------------------|----------------------------------------------------|
+|---------------------|-------------------------------------------------------------------------------------------------------------------|
 | dui.strat.leave     | Imagine you are out and know you have had too much to drink. Would you leave your car where it was and not drive? |
 | dui.strat.light     | How likely would you be to drink light or zero alcohol drink (beer/cider/wine) if driving?                        |
 | dui.strat.driver    | How likely would you be to plan ahead that the driver will not drink?                                             |

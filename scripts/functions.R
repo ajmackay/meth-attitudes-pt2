@@ -1,47 +1,7 @@
-#### Load all objects ####.
-# Loads objects - throws a message if the last date of object save is different to data processing
-function(objects = 'all-objects'){
+#### save.table ####
 
-}
 
-#### Flextable defaults ####
-set.default.ft <- function(font.family = 'Calibri',
-                           font.size = 10,
-                           layout = 'autofit',
-                           padding = 6,
-                           theme_fun = 'theme_vanilla',
-                           digits = 3, ...) {
 
-  flextable::set_flextable_defaults(
-    font.family = font.family,
-    font.size = font.size,
-    layout = layout,
-    padding = padding,
-    theme_fun = theme_fun,
-    digits = digits)
-
-  if(digits != 3){
-    cat(crayon::red("Use colformat_double() to adjust digits"))
-  }
-
-  cat(crayon::green("Flextable Default Set"))
-
-}
-
-#### decimal places ####
-#### Prep Table ####
-prep.table <- function(dat, dp = 2){
-  # Turning names into title
-  # dat.names <- names(dat)
-  # already.up <- str_detect(x, "^[:upper:]+$")
-  # str_to_title(dat.names[!already.up])
-  dat <- dat %>%
-    mutate(across(where(is.numeric), ~round(.x, dp)))
-
-  dat
-}
-
-#### Format p ####
 format.p <- function(dat){
   if(!any(str_detect(class(dat), "tbl"))){
 
@@ -62,12 +22,6 @@ format.p <- function(dat, p.value = p.value){
 
 # any(str_detect(class(anova.tbl), "data.frame"))
 
-#### Stop Quietly ####
-stop_quietly <- function() {
-  opt <- options(show.error.messages = FALSE)
-  on.exit(options(opt))
-  stop()
-}
 
 #### Margin of error calculator ####
 margin.error <- function(level = 0.975, sd, n){
@@ -75,21 +29,6 @@ margin.error <- function(level = 0.975, sd, n){
   qnorm(level) * sd / sqrt(n)
 }
 
-
-
-#### Save Objects ####
-save.objects <- function(path = NULL) {
-  if(is.null(path)){
-    path <- "objects/all-objects.RData"
-    save.image(file = path)
-  } else{
-    path <- path
-    save.image(file = path)
-  }
-
-  message(crayon::green(str_glue("Environment saved at ", crayon::black("{path}"))))
-
-}
 
 
 #### Effect Size Calculator ####
@@ -125,6 +64,27 @@ tmp <- function(models){
   })
 }
 
+
+if(FALSE){
+  summ.tbl <- function(dat, summ.by = NULL, dp = 1, caption = NULL){
+    tbl_summary(dat,
+                by = summ.by,
+                statistic = list(all_continuous() ~ "{mean} ({sd})"),
+                digits = list(
+                  all_continuous() ~ dp,
+                  all_categorical() ~ dp
+                ),
+                missing_text = "Missing",
+                sort = list(everything() ~ "frequency")) %>%
+      bold_labels() %>%
+      as_flex_table() %>%
+      fontsize(size = 10) %>%
+      theme_zebra() %>%
+      set_caption(caption) %>%
+      set_table_properties(layout = "autofit")
+  }
+
+}
 
 
 
