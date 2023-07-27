@@ -27,6 +27,12 @@ Does one of two things:
 
 -   Descriptive summaries are saved as 'summ.'
 
+### multigroup-analyses.R
+
+-   Statistical Analyses for attitudes
+
+### survey.analyses.R
+
 ### output-prep.R
 
 -   Prepares the output in relevant format (primary ggplots and flextables) to either then be exported or used in quarto document

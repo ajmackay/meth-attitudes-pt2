@@ -1,3 +1,25 @@
+
+save.figs.x <- function(dir = 'objects/', name = 'figs-tables'){
+  browser()
+  full.dir <- str_c(dir, name, ".RData")
+  save(list = ls()[str_detect(ls(), "plt\\.|tbl\\.|fig\\.")], file = full.dir, envir = .GlobalEnv)
+  cat(crayon::green(str_glue("Figures and Tables saved in {dir}{name}.RData")))
+}
+
+tbl.plts <- ls()[str_detect(ls(), "plt\\.|tbl\\.|fig\\.")]
+
+save(list = tbl.plts, file = "objects/figs-tables.RData", envir = .GlobalEnv)
+
+### THIS IS WEIRD THAT IS DOESN'T WORK
+x <- function(){
+save(list = ls()[str_detect(ls(), "plt\\.|tbl\\.|fig\\.")], file = "objects/figs-tables.RData", envir = .GlobalEnv)
+}
+
+
+
+
+
+
 #### save.table ####
 
 

@@ -1,0 +1,101 @@
+---
+title: "Paper 2 Presentation"
+author: "Aaron Mackay"
+format: 
+  html:
+    toc: true
+    embed-resources: true
+editor_options:
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+library(AzTools)
+library(tidyverse)
+library(flextable)
+
+load.figs()
+```
+
+## Aims
+
+1.  Explore the relationship between attitudes toward drug driving (Attitudes) and dangerous driving behaviour in people who use methamphetamine
+2.  Examine how this relationship (between attitudes and dangeroud driving) is different between people who use methamphetamine and people who have never used drugs (H1: Methamphetamine Users will have stronger, positive relationships between attitudes and driving behaviour)
+3.  (Bonus) Test and validate a measure of Attitude toward Drug Driving
+
+## Method
+
+-   Anonymous Qualitrics Survey
+
+-   Responses from people who regularly use methamphetamine and non-drug users
+
+### Measures
+
+-   Dula Dangerous Driving Index (x questions)
+
+-   Attitudes toward Drink Driving (modified for drug driving)
+
+### Statistical Analysis
+
+-   Multigroup Analysis using global estimation
+
+## Results
+
+### Descriptives
+
+#### Sample
+
+```{r}
+#| echo: false
+tbl.dems
+```
+
+#### Attitudes
+
+```{r}
+#| echo: false
+plt.att.score
+```
+
+People who use methamphetamine had more favourable attitudes toward risk, more favourable peer attitudes toward drug driving and more unfavourable attitudes toward sanctions.
+
+#### Dangerous Driving Behaviour
+
+```{r}
+#| echo: false
+plt.dd.total
+```
+
+### Analysis
+
+#### 1. Constrained vs Free Model
+
+**Chi Square: Free vs Constrained Model**
+
+```{r}
+#| echo: false
+tbl.model.comparison
+```
+
+**Model-Wide Interactions**
+
+```{r}
+#| echo: false
+tbl.model.int
+```
+
+#### 2. Examine Each Model
+
+**Non-Drug Users**
+
+```{r}
+#| echo: false
+tbl.mga.ndu
+```
+
+**Methamphetamine Users**
+
+```{r}
+#| echo: false
+tbl.mga.mu
+```

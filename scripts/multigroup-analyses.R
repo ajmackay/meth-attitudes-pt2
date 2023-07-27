@@ -47,6 +47,9 @@ model.psem <- piecewiseSEM::psem(lm(dd.total ~ duid.att.risk + duid.att.sanction
 
 piecewiseSEM::multigroup(model.psem, group = "ma.ingest")
 
+multigroup.model <- piecewiseSEM::multigroup(model.psem, group = "ma.ingest")
+
+
 #### Models ####
 ma.lm <- lm(dd.total ~ duid.att.risk + duid.att.sanction + duid.att.peer, filter(dat, ma.ingest))
 nma.lm <- lm(dd.total ~ duid.att.risk + duid.att.sanction + duid.att.peer, filter(dat, !ma.ingest))
