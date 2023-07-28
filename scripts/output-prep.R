@@ -7,14 +7,19 @@ load("objects/all-objects.RData")
 
 
 
-# For ARSC Conference
-#### Age and Gender Breakdown ####
+#### Questionnaire Psychemetrics ####
+
+
+
+
+#### Sample Characteristics ####
+##### Age and Gender Breakdown #####
 tbl.dems <- dat.dems %>%
   mutate(ma.ingest = if_else(ma.ingest, "MA User", "Non-Drug User"),
          any.psychiatric.diagnosis = if_else(any.psychiatric.diagnosis, "Yes", "No")) %>%
   select(ma.ingest, Age = age, Sex = sex, education,  ever.used.alcohol = alcohol.ever, employment.status, license.status, psychiatric.diagnosis = any.psychiatric.diagnosis, residential.area = area.live) %>%
   prep.names() %>%
-  ft.summary(summ.by = "Ma Ingest", include.p = TRUE)
+  flex.summary(summ.by = "Ma Ingest", include.p = TRUE)
 
 if (FALSE) save.table(tbl.dems, "demographics")
 
@@ -90,7 +95,33 @@ t.summ <- select(dat, -c(id, dd.ne.total, dd.ad.total, dd.rd.total)) %>%
   ) %>%
   add_p()
 
-t.summ
+
+#### Psychometric Properties ####
+##### Reliability #####
+tbl.alphas <- as_tibble(alpha.risk$total) %>%
+  mutate(Factor = 'Risk') %>%
+  select(alpha = std.alpha, Factor) %>%
+
+  bind_rows(
+    as_tibble(alpha.sanctions$total) %>%
+      mutate(Factor = 'Sanctions') %>%
+      select(alpha = std.alpha, Factor)
+  ) %>%
+
+  bind_rows(
+    as_tibble(alpha.peer$total) %>%
+      mutate(Factor = 'Peer') %>%
+      select(alpha = std.alpha, Factor)
+  ) %>%
+  prep.flex() %>%
+  colformat_double(digits = 2)
+
+##### CFA #####
+tbl.cfa.loadings <- cfa.loadings %>%
+  mutate(Variable = str_to_title(Variable),
+         across(where(is.numeric), ~as.character(.x) %>% str_replace("^0$", "-"))) %>%
+  prep.flex() %>% colformat_double(digits = 2)
+
 
 #### Model Coefficients ####
 tbl.model.comparison <- anova(mgp.free, mgp.constrained) %>% broom::tidy() %>%

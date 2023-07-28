@@ -38,15 +38,20 @@ cfa.att <- cfa(cfa.m1, duid.att.items)
 
 inspect(cfa.att, 'cov.lv')
 
-summary(cfa.att, standardized = TRUE, fit.measures = TRUE)
+summary(cfa.att, standardized = TRUE, fit.measures = TRUE) -> x
 
 standardizedsolution(cfa.att)
 
-tbl.cfa.loadings <- inspect(cfa.att, 'std')$lambda %>% data.frame() %>%  rownames_to_column("Variable") %>%
-  mutate(across(where(is.numeric), ~round(.x, 3)))
+# Standardised Loadings
+cfa.loadings <- inspect(cfa.att, 'std')$lambda %>% data.frame() %>%  rownames_to_column("Variable") %>%
+  mutate(across(where(is.numeric), ~round(.x, 2)))
 
-tbl.fit
 
+
+
+
+
+#### Exploring ####
 cfa.m2 <- '
   risk =~ overrated + caught + high
   sanctions =~ strict + jail + lose

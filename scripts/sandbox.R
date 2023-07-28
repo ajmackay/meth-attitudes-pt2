@@ -1,3 +1,20 @@
+x <- tibble(
+  a = runif(5),
+  b = runif(5),
+  c = runif(5)
+)
+
+x %>%
+  pivot_longer(cols = everything()) %>%
+  group_by(name) %>%
+  summarise(mean = mean(value)) %>%
+  ungroup() %>%
+  summarise(mean = mean(mean))
+
+x %>%
+  pivot_longer(cols = everything()) %>%
+  summarise(mean = mean(value))
+
 set_flextable_defaults(
   digits = 3,
   decimal.mark = ",",
