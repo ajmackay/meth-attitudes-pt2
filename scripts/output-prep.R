@@ -13,15 +13,37 @@ load("objects/all-objects.RData")
 
 
 #### Sample Characteristics ####
-##### Age and Gender Breakdown #####
+##### Demographics #####
 tbl.dems <- dat.dems %>%
   mutate(ma.ingest = if_else(ma.ingest, "MA User", "Non-Drug User"),
          any.psychiatric.diagnosis = if_else(any.psychiatric.diagnosis, "Yes", "No")) %>%
-  select(ma.ingest, Age = age, Sex = sex, education,  ever.used.alcohol = alcohol.ever, employment.status, license.status, psychiatric.diagnosis = any.psychiatric.diagnosis, residential.area = area.live) %>%
+  select(ma.ingest, Age = age, Sex = sex, education,  ever.used.alcohol = alcohol.ever, audit.total,
+         employment.status, license.status, psychiatric.diagnosis = any.psychiatric.diagnosis, residential.area = area.live) %>%
   prep.names() %>%
-  flex.summary(summ.by = "Ma Ingest", include.p = TRUE)
+  flex.summary(summ.by = "Ma Ingest", include.p = !TRUE, dp = 2)
 
-if (FALSE) save.table(tbl.dems, "demographics")
+#### Methamphetamine Use #####
+tbl.ma.use <- ma.df %>%
+  filter(id %in% dat$id) %>%
+  select(ma.use.peak, ma.use.age, ma.use.ways, sds.total, ma.type) %>%
+  prep.names() %>%
+  flex.summary(dp = 2)
+
+# AUDIT Scores
+audit.df %>%
+  filter(id %in% dat$id) %>%
+  group_by(ma.ingest) %>%
+  count(audit.risky) %>%
+  mutate(p = scales::percent(n / sum(n), .01))
+
+
+if (FALSE) {
+  save_as_docx(tbl.dems, path = "output/tables/demographics.docx")
+  flex2xl(tbl.dems, "output/tables/demographics.xlsx")
+
+  save_as_docx(tbl.ma.use, path = "output/tables/ma-use.docx")
+}
+
 
 #### Attitudes boxplot ####
 dat.long <- dat %>%
@@ -137,13 +159,23 @@ tbl.model.int <- multigroup.model$anovaInts %>%
 mga.coefs <- map(multigroup.model$group.coefs, function(dat){
   # browser()
   dat <- as_tibble(dat, .name_repair = "unique")
-  mutate(dat, P.Value = scales::pvalue(as.numeric(P.Value))) %>%
-    select(Response, Predictor, Estimate, Std.Error, DF, P.Value)
+  mutate(dat,
+         p = scales::pvalue(as.numeric(P.Value)),
+         across(.cols = c(Estimate, Std.Error, DF, Crit.Value), ~as.numeric(.x))) %>%
+    select(Response, Predictor, Estimate, Std.Error, DF, p)
 })
 
-tbl.mga.ndu <- mga.coefs$`FALSE` %>% ft.prep() %>% set_caption("Non-Drug Users")
-tbl.mga.mu <- mga.coefs$`TRUE` %>% ft.prep() %>% set_caption("Methamphetamine Users")
+tbl.mga.ndu <- mga.coefs$`FALSE` %>%
+  mutate(across(where(is.numeric), ~round(.x, 2))) %>%
+  ft.prep(digits = 2) %>% set_caption("Non-Drug Users")
 
+
+tbl.mga.mu <- mga.coefs$`TRUE` %>% ft.prep(digits = 2) %>% set_caption("Methamphetamine Users")
+
+if(FALSE){
+  save_as_docx(tbl.mga.ndu, path = "output/tables/non-drug-user-regression.docx")
+  save_as_docx(tbl.mga.mu, path = "output/tables/methamphetamine-user-regression.docx")
+}
 
 dat %>%
   mutate(dd.subscale = factor(dd.subscale, levels = c("dd.ad.total", "dd.ne.total", "dd.rd.total"))) %>%
