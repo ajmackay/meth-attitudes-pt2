@@ -1,3 +1,11 @@
+camcorder::gg_record(
+  dir = "output/plots",
+  width = 12,
+  height = 12 * 9 / 16,
+  dpi = 300,
+  bg = NULL
+)
+
 x <- tibble(
   a = runif(5),
   b = runif(5),

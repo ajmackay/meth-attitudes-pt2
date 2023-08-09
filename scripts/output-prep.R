@@ -76,11 +76,13 @@ plt.att.score <- ggboxplot(dat.long, x = "att.subscale", y = "value", width = 0.
   scale_fill_brewer(palette = "OrRd") +
   scale_y_continuous(breaks = seq(2, 7, 1)) +
 
-  theme(axis.title = element_text(face = "bold"),
-        axis.text = element_text(size = 10))
+  theme(axis.title.y = element_text(face = "bold"),
+        axis.title.x = element_text(face = 'bold', vjust = -2),
+        axis.text = element_text(size = 11),
+        legend.text = element_text(size = 11))
 
 if (FALSE) {
-  ggsave(p.att.score, width = 900, height = 700, units = "px", dpi = 95, filename = "output/attitude-boxplot.png")
+  ggsave(p.att.score, width = 900, height = 700, units = "px", dpi = 300, filename = "output/attitude-boxplot.png")
 }
 
 #### Dangerous Driving Boxplot ####
