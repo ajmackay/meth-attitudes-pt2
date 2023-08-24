@@ -54,6 +54,8 @@ multigroup.model <- piecewiseSEM::multigroup(model.psem, group = "ma.ingest")
 ma.lm <- lm(dd.total ~ duid.att.risk + duid.att.sanction + duid.att.peer, filter(dat, ma.ingest))
 nma.lm <- lm(dd.total ~ duid.att.risk + duid.att.sanction + duid.att.peer, filter(dat, !ma.ingest))
 
+tidy(ma.lm, conf.int = TRUE) %>%
+  format_p(p.value) %>% prep.flex(digits = 2)
 
 #### T test between groups for DD ####
 dat %>% t_test(dd.total ~ ma.ingest) %>%

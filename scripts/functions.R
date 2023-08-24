@@ -1,4 +1,10 @@
 
+format_p <- function(dat, col = p, keep = "unused") {
+  mutate(dat, p = scales::pvalue( {{col}} ), .keep = keep)
+}
+
+
+
 save.figs.x <- function(dir = 'objects/', name = 'figs-tables'){
   browser()
   full.dir <- str_c(dir, name, ".RData")
