@@ -1,4 +1,5 @@
 if(!"packages" %in% ls()) source("scripts/load-packages.R")
+devtools::install_github("https://github.com/ajmackay/AzTools.git")
 source("scripts/functions.R")
 load("objects/all-objects.RData")
 
@@ -48,6 +49,11 @@ model.psem <- piecewiseSEM::psem(lm(dd.total ~ duid.att.risk + duid.att.sanction
 piecewiseSEM::multigroup(model.psem, group = "ma.ingest")
 
 multigroup.model <- piecewiseSEM::multigroup(model.psem, group = "ma.ingest")
+
+
+####| Model Fit ####
+#####| Overall Model #####
+
 
 
 ####| Regression Models ####
