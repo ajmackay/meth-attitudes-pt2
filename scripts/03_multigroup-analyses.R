@@ -61,10 +61,40 @@ overall.model.summ <- summary(overall.model, fit.measures = TRUE)
 overall.tests.tbl <- tibble(variable = names(overall.model.summ$fit),
        value = overall.model.summ$fit %>% as.numeric() %>% round(2)) %>% prep_flex()
 
-save_as_docx(overall.tests.tbl, path = "output/tables/overall-fit-tests.docx")
+# save_as_docx(overall.tests.tbl, path = "output/tables/overall-fit-tests.docx")
 
 #####| Individual Groups #####
-summary(mgp.free, fit.measures = TRUE)
+mgp.ma <- sem(mgp.model, data = filter(dat, ma.ingest))
+
+summary(mgp.ma, fit.measures = TRUE)
+
+mpg.ma.summ <- summary(mgp.ma, fit.measures = TRUE)
+
+mpg.ma.tbl <- tibble(variable = names(mpg.ma.summ$fit),
+                     value = as.numeric(mpg.ma.summ$fit) %>% round(2)) %>% prep_flex(digits = 2)
+
+# save_as_docx(mpg.ma.tbl, path = "output/tables/ma-sem.docx")
+
+mgp.nma <- sem(mgp.model, data = filter(dat, !ma.ingest))
+
+summary(mgp.nma, fit.measures = TRUE)
+
+#####| User vs baseline model #####
+baseline.model <- sem("dd.total ~ 1", data = dat)
+
+anova(overall.model, baseline.model)
+
+
+# subgroup.model.summ <- summary(mgp.free, fit.measures = TRUE)
+#
+# tibble(variable = names(subgroup.model.summ$fit),
+#        value = as.numeric(subgroup.model.summ$fit) %>% round(2)) %>% prep_flex(digits = 2)
+
+
+
+
+
+
 
 #####| Individual #####
 
