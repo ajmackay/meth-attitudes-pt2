@@ -56,9 +56,17 @@ multigroup.model <- piecewiseSEM::multigroup(model.psem, group = "ma.ingest")
 ####| Model Fit ####
 #####| Overall Model #####
 overall.model <- sem(mgp.model, data = dat)
-summary(overall.model, fit.measures = TRUE)
+overall.model.summ <- summary(overall.model, fit.measures = TRUE)
 
+overall.tests.tbl <- tibble(variable = names(overall.model.summ$fit),
+       value = overall.model.summ$fit %>% as.numeric() %>% round(2)) %>% prep_flex()
+
+save_as_docx(overall.tests.tbl, path = "output/tables/overall-fit-tests.docx")
+
+#####| Individual Groups #####
 summary(mgp.free, fit.measures = TRUE)
+
+#####| Individual #####
 
 ####| Regression Models ####
 ma.lm <- lm(dd.total ~ duid.att.risk + duid.att.sanction + duid.att.peer, filter(dat, ma.ingest))
