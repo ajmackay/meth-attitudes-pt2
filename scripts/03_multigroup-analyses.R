@@ -1,5 +1,5 @@
 if(!"packages" %in% ls()) source("scripts/load-packages.R")
-devtools::install_github("https://github.com/ajmackay/AzTools.git")
+# devtools::install_github("https://github.com/ajmackay/AzTools.git")
 source("scripts/functions.R")
 load("objects/all-objects.RData")
 
@@ -46,6 +46,8 @@ anova(mgp.free, mgp.peer)
 # (basically does all the above stuff in one go lol)
 model.psem <- piecewiseSEM::psem(lm(dd.total ~ duid.att.risk + duid.att.sanction + duid.att.peer, dat))
 
+summary(model.psem, fit.measures = TRUE)
+
 piecewiseSEM::multigroup(model.psem, group = "ma.ingest")
 
 multigroup.model <- piecewiseSEM::multigroup(model.psem, group = "ma.ingest")
@@ -53,8 +55,10 @@ multigroup.model <- piecewiseSEM::multigroup(model.psem, group = "ma.ingest")
 
 ####| Model Fit ####
 #####| Overall Model #####
+overall.model <- sem(mgp.model, data = dat)
+summary(overall.model, fit.measures = TRUE)
 
-
+summary(mgp.free, fit.measures = TRUE)
 
 ####| Regression Models ####
 ma.lm <- lm(dd.total ~ duid.att.risk + duid.att.sanction + duid.att.peer, filter(dat, ma.ingest))
